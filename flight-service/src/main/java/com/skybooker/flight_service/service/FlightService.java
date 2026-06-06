@@ -1,40 +1,39 @@
 package com.skybooker.flight_service.service;
 
-import com.skybooker.flight_service.model.Flight;
+import com.skybooker.flight_service.dto.FlightRequestDto;
+import com.skybooker.flight_service.dto.FlightResponseDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public interface FlightService {
 
-    Flight addFlight(Flight flight);
+    FlightResponseDto addFlight(FlightRequestDto flightRequestDto);
 
-    Optional<Flight> getFlightById(Integer flightId);
+    FlightResponseDto getFlightById(Long flightId);
 
-    Optional<Flight> getFlightByNumber(String flightNumber);
+    FlightResponseDto getFlightByNumber(String flightNumber);
 
-    List<Flight> searchFlights(String origin, String destination, LocalDate travelDate, int passengers);
+    List<FlightResponseDto> searchFlights(String origin, String destination, LocalDate travelDate, int passengers);
 
-    Map<String, List<Flight>> searchRoundTrip(
-            String origin,
-            String destination,
-            LocalDate departureDate,
-            LocalDate returnDate,
-            int passengers
-    );
+    Page<FlightResponseDto> searchFlightsWithPagination(String origin, String destination, LocalDate travelDate, int passengers, Pageable pageable);
 
-    Flight updateFlight(Integer flightId, Flight flight);
+    Map<String, List<FlightResponseDto>> searchRoundTrip(String origin, String destination, LocalDate departureDate, LocalDate returnDate, int passengers);
 
-    void updateStatus(Integer flightId, String status);
+    FlightResponseDto updateFlight(Long flightId, FlightRequestDto flightRequestDto);
 
-    void decrementSeats(Integer flightId, int seats);
+    void updateStatus(Long flightId, String status);
 
-    void incrementSeats(Integer flightId,int seats );
+    void decrementSeats(Long flightId, int seats);
 
-    void deleteFlight(Integer flightId);
+    void incrementSeats(Long flightId, int seats);
 
-    List<Flight> getFlightsByAirline(Integer airlineId );
+    void deleteFlight(Long flightId);
 
+    List<FlightResponseDto> getFlightsByAirline(Long airlineId);
+
+    Page<FlightResponseDto> getFlightsByAirline(Long airlineId, Pageable pageable);
 }
