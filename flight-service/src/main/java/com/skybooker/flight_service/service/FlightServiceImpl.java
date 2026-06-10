@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -115,10 +116,20 @@ public class FlightServiceImpl implements FlightService {
         log.info("Searching round trip from {} to {} on {} and return on {}",
                 origin, destination, departureDate, returnDate);
 
+
+        Map<String, List<FlightResponseDto>> result = new HashMap<>();
+
+        // Search outbound flights (origin -> destination on departure date)
         List<FlightResponseDto> outbound = searchFlights(origin, destination, departureDate, passengers);
+
+        // Search inbound flights (destination -> origin on return date)
         List<FlightResponseDto> inbound = searchFlights(destination, origin, returnDate, passengers);
 
-        return Map.of("outbound", outbound, "inbound", inbound);
+        result.put("outbound", outbound);
+        result.put("inbound", inbound);
+
+        log.info("Found {} outbound and {} inbound flights", outbound.size(), inbound.size());
+        return result;
     }
 
     @Override
